@@ -1,13 +1,17 @@
 import Nfa
-import Data.Set
- 
-states = fromList[1,2,3]
-alphabet = fromList['a','b']
-init = fromList[1]
-final = fromList[2]
+import qualified Data.Set as Set
+import qualified Data.Map as Map
+import Prelude hiding (init)
 
-delta :: State -> Letter -> (Set State)
-delta 1 'a' = fromList[1]
-delta 1 'b' = fromList[2]
-delta 2 _ = fromList[3]
-delta 3 _ = fromList[3]
+states = Set.fromList[1,2,3]
+alphabet = Set.fromList['a','b']
+init = Set.fromList[1]
+final = Set.fromList[2]
+a1 = NFAc states alphabet init delta final
+
+delta = Map.fromList[((1,'a'),Set.fromList[1]),
+    ((1,'b'),Set.fromList[2]),
+    ((2,'a'),Set.fromList[3]),
+    ((2,'b'),Set.fromList[3]),
+    ((3,'a'),Set.fromList[3]),
+    ((3,'b'),Set.fromList[3])]
