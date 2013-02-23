@@ -45,6 +45,15 @@ makeComplete (NFAc states alphabet init delta final) =
         in let delta' = Map.fromList [(x,errorSet) | x <- (Set.toList unassigned')]
             in NFAc (states `Set.union` errorSet) alphabet init' (delta `Map.union` delta') final
 
+-- Creates an automaton that accepts the union of the languages accepted by the input automata.
+union :: NFA -> NFA -> NFA
+
+-- Creates an automaton that accepts the intersection of the languages accepted by the input automata.
+intersection :: NFA -> NFA -> NFA
+
+-- Creates an automaton that accepts the complement of the input NFA
+complement :: NFA -> NFA
+
 -- Normal cartesian product / settimes operation as it should exist in haskell...
 times :: (Ord a, Ord b) => Set.Set a -> Set.Set b -> Set.Set (a,b)
 times xs ys = Set.fromList[(x,y) | x <- (Set.toList xs), y <- (Set.toList ys)]
