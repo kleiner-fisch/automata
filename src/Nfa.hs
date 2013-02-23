@@ -10,7 +10,7 @@ import Prelude hiding (init)
 type State = Integer
 type Letter = Char
 errorState = -1
-errorSet = Set.unitSet errorState
+errorSet = Set.singleton errorState
 
 -- (S, Sigma, I, delta, F)
 data NFA = NFAc (Set.Set State)  (Set.Set Letter) (Set.Set State)  (Map.Map (State, Letter)  (Set.Set State)) (Set.Set State)
@@ -31,6 +31,9 @@ isAccepted (NFAc states alphabet init delta final) word
           else let f xs sigma = setTransition delta xs sigma
             in Just (((List.foldl f init word) `Set.intersection` final) /= Set.empty)
 
+-- makes an automaton complete s.t. for each pair in (States x Alphabet) a the transition function returns a state.
+-- For this a sink state is added to States which is the result of all previously unassigned pairs in (States x Alphabet).
+-- This function keeps DFA deterministc. It adds the sinkstate, but it will be unreachable.
 makeComplete :: NFA -> NFA
 makeComplete (NFAc states alphabet init delta final) =
     let unassigned = (states `times` alphabet) `Set.difference` (Map.keysSet delta)
