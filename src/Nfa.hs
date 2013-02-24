@@ -46,13 +46,22 @@ makeComplete (NFAc states alphabet init delta final) =
             in NFAc (states `Set.union` errorSet) alphabet init' (delta `Map.union` delta') final
 
 -- Creates an automaton that accepts the union of the languages accepted by the input automata.
-union :: NFA -> NFA -> NFA
+-- we assume the input automata are complete
+union :: NFA -> NFA -> Maybe NFA
+union (NFAc states1 alphabet1 init1 delta1 final1) (NFAc states2 alphabet2 init2 delta2 final2) =
+    if alphabet1 == alphabet2
+        then Just (NFAc states3 alphabet1 init3 delta3 final3) 
+        else Nothing
+    where states3   = states1 `times` states2
+          init3       = init1 `times` init2
+          final3      = final1 `times` final2
+          delta3      = Map.fromList [(((s1,s2),sigma),(Map.lookup (s1, sigma) delta1, Map.lookup (s2, sigma) delta2)) | s1 <- Set.toList states1, s2 <- Set.toList states2, sigma <- Set.toList alphabet1]
 
 -- Creates an automaton that accepts the intersection of the languages accepted by the input automata.
-intersection :: NFA -> NFA -> NFA
+-- intersection :: NFA -> NFA -> NFA
 
 -- Creates an automaton that accepts the complement of the input NFA
-complement :: NFA -> NFA
+-- complement :: NFA -> NFA
 
 -- Normal cartesian product / settimes operation as it should exist in haskell...
 times :: (Ord a, Ord b) => Set.Set a -> Set.Set b -> Set.Set (a,b)
