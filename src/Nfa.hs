@@ -23,7 +23,7 @@ setTransition delta xs sigma    = Set.fold f Set.empty xs
 -- naivly test whether a given word is accepted
 -- for this we forward propagate the current state sets on our input word
 -- we assume the automaton is complete
---isAccepted :: NFA -> [letter] -> Maybe Bool
+isAccepted :: (Ord a) => (Ord b) => (Eq b) => NFA a b -> [b] -> Maybe Bool
 isAccepted (NFAc states alphabet init delta final) word 
     = if ((Set.fromList word) `Set.union` alphabet) /= alphabet
           then Nothing
